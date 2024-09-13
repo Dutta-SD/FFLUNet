@@ -1,5 +1,5 @@
 import torch
-import torch.nn.functional as F
+import torch.nn.functional as nnfx
 from torch import nn
 
 from nnunetv2.training.nnUNetTrainer.variants.fflunet.blocks import (
@@ -74,10 +74,10 @@ class FFLUNet(nn.Module):
         x = x4 = self.m4(x, 4)
         x = self.d4(x)
 
-        w4 = F.softmax(self.w4, dim=0)
-        w3 = F.softmax(self.w3, dim=0)
-        w2 = F.softmax(self.w2, dim=0)
-        w1 = F.softmax(self.w1, dim=0)
+        w4 = nnfx.softmax(self.w4, dim=0)
+        w3 = nnfx.softmax(self.w3, dim=0)
+        w2 = nnfx.softmax(self.w2, dim=0)
+        w1 = nnfx.softmax(self.w1, dim=0)
 
         x = w4[0] * self.u4(x) + w4[1] * self.s4(x4)
         x = w3[0] * self.u3(x) + w3[1] * self.s3(x3)
