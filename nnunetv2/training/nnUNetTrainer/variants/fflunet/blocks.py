@@ -1,3 +1,4 @@
+import monai.networks.blocks
 import torch
 import torch.nn as nn
 import torch.nn.functional as fx
@@ -171,5 +172,38 @@ class Output(nn.Module):
             ),
         )
 
+    def forward(self, x):
+        return self.conv_path(x)
+
+class OutputV2(nn.Module):
+    def __init__(self, in_channels: int, out_channels: int):
+        super().__init__()
+        self.conv_path = nn.Sequential(
+            get_conv(
+                in_channels=in_channels,
+                out_channels=in_channels,
+                kernel=2,
+                stride=2,
+                padding=0,
+                output_padding=0,
+                dilation=1,
+                is_transposed=True,
+            ),
+            get_conv(
+                in_channels=in_channels,
+                out_channels=out_channels,
+                kernel=7,
+                stride=1,
+                dilation=1,
+                padding=None,
+            ),
+            nn.Conv3d(
+                in_channels=out_channels,
+                out_channels=out_channels,
+                kernel_size=1,
+                stride=1,
+                padding=0,
+            ),
+        )
     def forward(self, x):
         return self.conv_path(x)

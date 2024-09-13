@@ -67,16 +67,16 @@ class FFLUNetDynamicWindowShift(nn.Module):
     def forward(self, x):
         x = self.input(x)
 
-        x = x1 = self.m1(x, 32, w=FFLUNetDynamicWindowShift.get_dynamic_shifts(x))
+        x = x1 = self.m1(x, w=FFLUNetDynamicWindowShift.get_dynamic_shifts(x))
         x = self.d1(x)
 
-        x = x2 = self.m2(x, 16, w=FFLUNetDynamicWindowShift.get_dynamic_shifts(x))
+        x = x2 = self.m2(x, w=FFLUNetDynamicWindowShift.get_dynamic_shifts(x))
         x = self.d2(x)
 
-        x = x3 = self.m3(x, 8, w=FFLUNetDynamicWindowShift.get_dynamic_shifts(x))
+        x = x3 = self.m3(x, w=FFLUNetDynamicWindowShift.get_dynamic_shifts(x))
         x = self.d3(x)
 
-        x = x4 = self.m4(x, 4, w=FFLUNetDynamicWindowShift.get_dynamic_shifts(x))
+        x = x4 = self.m4(x, w=FFLUNetDynamicWindowShift.get_dynamic_shifts(x))
         x = self.d4(x)
 
         w4 = nnx.softmax(self.w4, dim=0)
@@ -94,14 +94,13 @@ class FFLUNetDynamicWindowShift(nn.Module):
 
 
 class nnUNetTrainer_FFLUNetDynamicShift(nnUNetTrainerNoDeepSupervision):
-
     @staticmethod
     def build_network_architecture(
-            plans_manager: PlansManager,
-            dataset_json,
-            configuration_manager: ConfigurationManager,
-            num_input_channels,
-            enable_deep_supervision: bool = False,
+        plans_manager: PlansManager,
+        dataset_json,
+        configuration_manager: ConfigurationManager,
+        num_input_channels,
+        enable_deep_supervision: bool = False,
     ) -> nn.Module:
         label_manager = plans_manager.get_label_manager(dataset_json)
         num_op_channels = label_manager.num_segmentation_heads

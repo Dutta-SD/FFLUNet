@@ -10,17 +10,17 @@ NO_ACTIVATION = "NO_ACTIVATION"
 
 
 def get_conv(
-        in_channels,
-        out_channels,
-        kernel=3,
-        stride=1,
-        padding=1,
-        dilation=1,
-        groups=None,
-        output_padding=None,
-        is_transposed=False,
-        act=None,
-        bias=False,
+    in_channels,
+    out_channels,
+    kernel=3,
+    stride=1,
+    padding=1,
+    dilation=1,
+    groups=None,
+    output_padding=None,
+    is_transposed=False,
+    act=None,
+    bias=False,
 ):
     if act is None:
         act = DEFAULT_ACT
@@ -40,7 +40,11 @@ def get_conv(
             dropout=DROPOUT,
             dilation=dilation,
             groups=groups,
-            act=(DEFAULT_ACT, {"num_parameters": out_channels}) if act == DEFAULT_ACT else act,
+            act=(
+                (DEFAULT_ACT, {"num_parameters": out_channels})
+                if act == DEFAULT_ACT
+                else act
+            ),
             bias=bias,
             norm=NORM,
         )
@@ -57,7 +61,11 @@ def get_conv(
             dropout=DROPOUT,
             dilation=dilation,
             groups=1,
-            act=(DEFAULT_ACT, {"num_parameters": out_channels}) if act == DEFAULT_ACT else act,
+            act=(
+                (DEFAULT_ACT, {"num_parameters": out_channels})
+                if act == DEFAULT_ACT
+                else act
+            ),
             bias=bias,
             norm=NORM,
         )
