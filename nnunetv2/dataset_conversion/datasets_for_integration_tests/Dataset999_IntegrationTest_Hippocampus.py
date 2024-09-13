@@ -5,8 +5,8 @@ from batchgenerators.utilities.file_and_folder_operations import isdir, join
 from nnunetv2.paths import nnUNet_raw
 from nnunetv2.utilities.dataset_name_id_conversion import maybe_convert_to_dataset_name
 
-if __name__ == '__main__':
-    dataset_name = 'IntegrationTest_Hippocampus'
+if __name__ == "__main__":
+    dataset_name = "IntegrationTest_Hippocampus"
     dataset_id = 999
     dataset_name = f"Dataset{dataset_id:03d}_{dataset_name}"
 
@@ -16,7 +16,8 @@ if __name__ == '__main__':
             raise FileExistsError(
                 f"A different dataset with id {dataset_id} already exists :-(: {existing_dataset_name}. If "
                 f"you intent to delete it, remember to also remove it in nnUNet_preprocessed and "
-                f"nnUNet_results!")
+                f"nnUNet_results!"
+            )
     except RuntimeError:
         pass
 

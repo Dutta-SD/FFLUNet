@@ -1,7 +1,10 @@
 import numpy as np
 
 # Hello! crop_to_nonzero is the function you are looking for. Ignore the rest.
-from acvl_utils.cropping_and_padding.bounding_boxes import get_bbox_from_mask, bounding_box_to_slice
+from acvl_utils.cropping_and_padding.bounding_boxes import (
+    get_bbox_from_mask,
+    bounding_box_to_slice,
+)
 
 
 def create_nonzero_mask(data):
@@ -11,7 +14,10 @@ def create_nonzero_mask(data):
     :return: the mask is True where the data is nonzero
     """
     from scipy.ndimage import binary_fill_holes
-    assert len(data.shape) == 4 or len(data.shape) == 3, "data must have shape (C, X, Y, Z) or shape (C, X, Y)"
+
+    assert (
+        len(data.shape) == 4 or len(data.shape) == 3
+    ), "data must have shape (C, X, Y, Z) or shape (C, X, Y)"
     nonzero_mask = np.zeros(data.shape[1:], dtype=bool)
     for c in range(data.shape[0]):
         this_mask = data[c] != 0

@@ -2,15 +2,25 @@ import shutil
 
 import SimpleITK as sitk
 import numpy as np
-from batchgenerators.utilities.file_and_folder_operations import isdir, join, load_json, save_json, nifti_files
+from batchgenerators.utilities.file_and_folder_operations import (
+    isdir,
+    join,
+    load_json,
+    save_json,
+    nifti_files,
+)
 
 from nnunetv2.paths import nnUNet_raw
 from nnunetv2.utilities.dataset_name_id_conversion import maybe_convert_to_dataset_name
 from nnunetv2.utilities.label_handling.label_handling import LabelManager
 
 
-def sparsify_segmentation(seg: np.ndarray, label_manager: LabelManager, percent_of_slices: float) -> np.ndarray:
-    assert label_manager.has_ignore_label, "This preprocessor only works with datasets that have an ignore label!"
+def sparsify_segmentation(
+    seg: np.ndarray, label_manager: LabelManager, percent_of_slices: float
+) -> np.ndarray:
+    assert (
+        label_manager.has_ignore_label
+    ), "This preprocessor only works with datasets that have an ignore label!"
     seg_new = np.ones_like(seg) * label_manager.ignore_label
     x, y, z = seg.shape
     # x
@@ -28,8 +38,8 @@ def sparsify_segmentation(seg: np.ndarray, label_manager: LabelManager, percent_
     return seg_new
 
 
-if __name__ == '__main__':
-    dataset_name = 'IntegrationTest_Hippocampus_regions_ignore'
+if __name__ == "__main__":
+    dataset_name = "IntegrationTest_Hippocampus_regions_ignore"
     dataset_id = 996
     dataset_name = f"Dataset{dataset_id:03d}_{dataset_name}"
 
@@ -39,7 +49,8 @@ if __name__ == '__main__':
             raise FileExistsError(
                 f"A different dataset with id {dataset_id} already exists :-(: {existing_dataset_name}. If "
                 f"you intent to delete it, remember to also remove it in nnUNet_preprocessed and "
-                f"nnUNet_results!")
+                f"nnUNet_results!"
+            )
     except RuntimeError:
         pass
 
@@ -50,21 +61,18 @@ if __name__ == '__main__':
     shutil.copytree(join(nnUNet_raw, source_dataset), join(nnUNet_raw, dataset_name))
 
     # additionally optimize entire hippocampus region, remove Posterior
-    dj = load_json(join(nnUNet_raw, dataset_name, 'dataset.json'))
-    dj['labels'] = {
-        'background': 0,
-        'hippocampus': (1, 2),
-        'anterior': 1,
-        'ignore': 3
-    }
-    dj['regions_class_order'] = (2, 1)
-    save_json(dj, join(nnUNet_raw, dataset_name, 'dataset.json'), sort_keys=False)
+    dj = load_json(join(nnUNet_raw, dataset_name, "dataset.json"))
+    dj["labels"] = {"background": 0, "hippocampus": (1, 2), "anterior": 1, "ignore": 3}
+    dj["regions_class_order"] = (2, 1)
+    save_json(dj, join(nnUNet_raw, dataset_name, "dataset.json"), sort_keys=False)
 
     # now add ignore label to segmentation images
     np.random.seed(1234)
-    lm = LabelManager(label_dict=dj['labels'], regions_class_order=dj.get('regions_class_order'))
+    lm = LabelManager(
+        label_dict=dj["labels"], regions_class_order=dj.get("regions_class_order")
+    )
 
-    segs = nifti_files(join(nnUNet_raw, dataset_name, 'labelsTr'))
+    segs = nifti_files(join(nnUNet_raw, dataset_name, "labelsTr"))
     for s in segs:
         seg_itk = sitk.ReadImage(s)
         seg_npy = sitk.GetArrayFromImage(seg_itk)
