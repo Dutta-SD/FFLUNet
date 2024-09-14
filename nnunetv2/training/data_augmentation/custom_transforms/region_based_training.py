@@ -5,8 +5,13 @@ from batchgenerators.transforms.abstract_transforms import AbstractTransform
 
 
 class ConvertSegmentationToRegionsTransform(AbstractTransform):
-    def __init__(self, regions: Union[List, Tuple],
-                 seg_key: str = "seg", output_key: str = "seg", seg_channel: int = 0):
+    def __init__(
+        self,
+        regions: Union[List, Tuple],
+        seg_key: str = "seg",
+        output_key: str = "seg",
+        seg_channel: int = 0,
+    ):
         """
         regions are tuple of tuples where each inner tuple holds the class indices that are merged into one region,
         example:
@@ -33,6 +38,8 @@ class ConvertSegmentationToRegionsTransform(AbstractTransform):
                     if not isinstance(region_source_labels, (list, tuple)):
                         region_source_labels = (region_source_labels,)
                     for label_value in region_source_labels:
-                        region_output[b, region_id][seg[b, self.seg_channel] == label_value] = 1
+                        region_output[b, region_id][
+                            seg[b, self.seg_channel] == label_value
+                        ] = 1
             data_dict[self.output_key] = region_output
         return data_dict

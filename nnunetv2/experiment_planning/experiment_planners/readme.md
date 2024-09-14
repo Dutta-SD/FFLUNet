@@ -1,9 +1,10 @@
-What do experiment planners need to do (these are notes for myself while rewriting nnU-Net, they are provided as is 
+What do experiment planners need to do (these are notes for myself while rewriting nnU-Net, they are provided as is
 without further explanations. These notes also include new features):
+
 - (done) preprocessor name should be configurable via cli
 - (done) gpu memory target should be configurable via cli
 - (done) plans name should be configurable via cli
-- (done) data name should be specified in plans (plans specify the data they want to use, this will allow us to manually 
+- (done) data name should be specified in plans (plans specify the data they want to use, this will allow us to manually
   edit plans files without having to copy the data folders)
 - plans must contain:
     - (done) transpose forward/backward
@@ -23,15 +24,16 @@ without further explanations. These notes also include new features):
     - (done) resampling function to be used
     - (done) the image reader writer class that should be used
 
-
 dataset.json
 mandatory:
+
 - numTraining
 - labels (value 'ignore' has special meaning. Cannot have more than one ignore_label)
 - modalities
 - file_ending
 
 optional
+
 - overwrite_image_reader_writer (if absent, auto)
 - regions
 - region_class_order

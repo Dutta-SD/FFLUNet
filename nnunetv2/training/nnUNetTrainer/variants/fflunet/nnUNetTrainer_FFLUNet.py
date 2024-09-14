@@ -91,11 +91,11 @@ class FFLUNet(nn.Module):
 class nnUNetTrainer_FFLUNet(nnUNetTrainerNoDeepSupervision):
     @staticmethod
     def build_network_architecture(
-            plans_manager: PlansManager,
-            dataset_json,
-            configuration_manager: ConfigurationManager,
-            num_input_channels,
-            enable_deep_supervision: bool = False,
+        plans_manager: PlansManager,
+        dataset_json,
+        configuration_manager: ConfigurationManager,
+        num_input_channels,
+        enable_deep_supervision: bool = False,
     ) -> nn.Module:
         label_manager = plans_manager.get_label_manager(dataset_json)
         num_op_channels = label_manager.num_segmentation_heads

@@ -174,6 +174,7 @@ class Output(nn.Module):
     def forward(self, x):
         return self.conv_path(x)
 
+
 class OutputV2(nn.Module):
     def __init__(self, in_channels: int, out_channels: int):
         super().__init__()
@@ -204,5 +205,6 @@ class OutputV2(nn.Module):
                 padding=0,
             ),
         )
+
     def forward(self, x):
         return self.conv_path(x)

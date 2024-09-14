@@ -1,51 +1,56 @@
-The nnU-Net inference is now much more dynamic than before, allowing you to more seamlessly integrate nnU-Net into 
+The nnU-Net inference is now much more dynamic than before, allowing you to more seamlessly integrate nnU-Net into
 your existing workflows.
-This readme will give you a quick rundown of your options. This is not a complete guide. Look into the code to learn 
+This readme will give you a quick rundown of your options. This is not a complete guide. Look into the code to learn
 all the details!
 
 # Preface
-In terms of speed, the most efficient inference strategy is the one done by the nnU-Net defaults! Images are read on 
-the fly and preprocessed in background workers. The main process takes the preprocessed images, predicts them and 
-sends the prediction off to another set of background workers which will resize the resulting logits, convert 
+
+In terms of speed, the most efficient inference strategy is the one done by the nnU-Net defaults! Images are read on
+the fly and preprocessed in background workers. The main process takes the preprocessed images, predicts them and
+sends the prediction off to another set of background workers which will resize the resulting logits, convert
 them to a segmentation and export the segmentation.
 
-The reason the default setup is the best option is because 
+The reason the default setup is the best option is because
 
-1) loading and preprocessing as well as segmentation export are interlaced with the prediction. The main process can 
-focus on communicating with the compute device (i.e. your GPU) and does not have to do any other processing. 
-This uses your resources as well as possible!
-2) only the images and segmentation that are currently being needed are stored in RAM! Imaging predicting many images 
-and having to store all of them + the results in your system memory
+1) loading and preprocessing as well as segmentation export are interlaced with the prediction. The main process can
+   focus on communicating with the compute device (i.e. your GPU) and does not have to do any other processing.
+   This uses your resources as well as possible!
+2) only the images and segmentation that are currently being needed are stored in RAM! Imaging predicting many images
+   and having to store all of them + the results in your system memory
 
 # nnUNetPredictor
-The new nnUNetPredictor class encapsulates the inferencing code and makes it simple to switch between modes. Your 
-code can hold a nnUNetPredictor instance and perform prediction on the fly. Previously this was not possible and each 
+
+The new nnUNetPredictor class encapsulates the inferencing code and makes it simple to switch between modes. Your
+code can hold a nnUNetPredictor instance and perform prediction on the fly. Previously this was not possible and each
 new prediction request resulted in reloading the parameters and reinstantiating the network architecture. Not ideal.
 
-The nnUNetPredictor must be ininitialized manually! You will want to use the 
+The nnUNetPredictor must be ininitialized manually! You will want to use the
 `predictor.initialize_from_trained_model_folder` function for 99% of use cases!
 
-New feature: If you do not specify an output folder / output files then the predicted segmentations will be 
-returned 
-
+New feature: If you do not specify an output folder / output files then the predicted segmentations will be
+returned
 
 ## Recommended nnU-Net default: predict from source files
 
 tldr:
+
 - loads images on the fly
 - performs preprocessing in background workers
 - main process focuses only on making predictions
 - results are again given to background workers for resampling and (optional) export
 
 pros:
+
 - best suited for predicting a large number of images
 - nicer to your RAM
 
 cons:
-- not ideal when single images are to be predicted 
+
+- not ideal when single images are to be predicted
 - requires images to be present as files
 
 Example:
+
 ```python
     from nnunetv2.paths import nnUNet_results, nnUNet_raw
     import torch
@@ -77,12 +82,12 @@ Example:
                                  folder_with_segs_from_prev_stage=None, num_parts=1, part_id=0)
 ```
 
-Instead if giving input and output folders you can also give concrete files. If you give concrete files, there is no 
+Instead if giving input and output folders you can also give concrete files. If you give concrete files, there is no
 need for the _0000 suffix anymore! This can be useful in situations where you have no control over the filenames!
-Remember that the files must be given as 'list of lists' where each entry in the outer list is a case to be predicted 
-and the inner list contains all the files belonging to that case. There is just one file for datasets with just one 
-input modality (such as CT) but may be more files for others (such as MRI where there is sometimes T1, T2, Flair etc). 
-IMPORTANT: the order in wich the files for each case are given must match the order of the channels as defined in the 
+Remember that the files must be given as 'list of lists' where each entry in the outer list is a case to be predicted
+and the inner list contains all the files belonging to that case. There is just one file for datasets with just one
+input modality (such as CT) but may be more files for others (such as MRI where there is sometimes T1, T2, Flair etc).
+IMPORTANT: the order in wich the files for each case are given must match the order of the channels as defined in the
 dataset.json!
 
 If you give files as input, you need to give individual output files as output!
@@ -101,6 +106,7 @@ If you give files as input, you need to give individual output files as output!
 ```
 
 Did you know? If you do not specify output files, the predicted segmentations will be returned:
+
 ```python
     # variant 2.5, returns segmentations
     indir = join(nnUNet_raw, 'Dataset003_Liver/imagesTs')
@@ -113,17 +119,21 @@ Did you know? If you do not specify output files, the predicted segmentations wi
 ```
 
 ## Prediction from npy arrays
+
 tldr:
+
 - you give images as a list of npy arrays
 - performs preprocessing in background workers
 - main process focuses only on making predictions
 - results are again given to background workers for resampling and (optional) export
 
 pros:
+
 - the correct variant for when you have images in RAM already
 - well suited for predicting multiple images
 
 cons:
+
 - uses more ram than the default
 - unsuited for large number of images as all images must be held in RAM
 
@@ -146,16 +156,19 @@ cons:
 ## Predicting a single npy array
 
 tldr:
+
 - you give one image as npy array
 - everything is done in the main process: preprocessing, prediction, resampling, (export)
 - no interlacing, slowest variant!
 - ONLY USE THIS IF YOU CANNOT GIVE NNUNET MULTIPLE IMAGES AT ONCE FOR SOME REASON
 
 pros:
+
 - no messing with multiprocessing
 - no messing with data iterator blabla
 
 cons:
+
 - slows as heck, yo
 - never the right choice unless you can only give a single image at a time to nnU-Net
 
@@ -166,16 +179,20 @@ cons:
 ```
 
 ## Predicting with a custom data iterator
-tldr: 
+
+tldr:
+
 - highly flexible
 - not for newbies
 
 pros:
+
 - you can do everything yourself
 - you have all the freedom you want
 - really fast if you remember to use multiprocessing in your iterator
 
 cons:
+
 - you need to do everything yourself
 - harder than you might think
 
