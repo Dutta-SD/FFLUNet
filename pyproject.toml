@@ -50,8 +50,12 @@ dependencies = [
     "seaborn",
     "imagecodecs",
     "yacs",
-    "monai"
+    "monai",
+    "threadpoolctl==3.1.0"
 ]
+
+[tool.setuptools.packages]
+find = { include = ["nnunetv2"], exclude = ["data", "logs"] }
 
 [project.urls]
 homepage = "https://github.com/MIC-DKFZ/nnUNet"
