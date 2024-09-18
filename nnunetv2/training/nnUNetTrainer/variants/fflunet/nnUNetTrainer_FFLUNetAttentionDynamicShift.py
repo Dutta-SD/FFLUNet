@@ -65,7 +65,7 @@ class FFLUNetAttentionDynamicShift(nn.Module):
             self.o2 = OutputV2(64, out_channels)
             self.o1 = OutputV2(32, out_channels)
         else:
-            self.o = OutputV2(32, out_channels)
+            self.output = OutputV2(32, out_channels)
 
     @staticmethod
     def get_dynamic_shifts(x: torch.Tensor):
@@ -99,7 +99,7 @@ class FFLUNetAttentionDynamicShift(nn.Module):
         if self.deep_supervision:
             return [self.o1(x1), self.o2(x2), self.o3(x3)]
         else:
-            return self.o(x)
+            return self.output(x)
 
 class nnUNetTrainer_FFLUNetAttentionDynamicShift(nnUNetTrainerNoDeepSupervision):
     @staticmethod

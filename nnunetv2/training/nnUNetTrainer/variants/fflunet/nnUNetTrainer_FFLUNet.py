@@ -65,7 +65,7 @@ class FFLUNet(nn.Module):
             self.o2 = Output(64, out_channels)
             self.o1 = Output(32, out_channels)
         else:
-            self.o = Output(32, out_channels)
+            self.output = Output(32, out_channels)
 
     def forward(self, x):
         x = self.input(x)
@@ -95,7 +95,7 @@ class FFLUNet(nn.Module):
         if self.deep_supervision:
             return [self.o1(x1), self.o2(x2), self.o3(x3)]
         else:
-            return self.o(x)
+            return self.output(x)
 
 
 class nnUNetTrainer_FFLUNet(nnUNetTrainerNoDeepSupervision):
