@@ -1107,7 +1107,7 @@ class nnUNetTrainer(object):
         """
         if self.is_ddp:
             self.network.module.decoder.deep_supervision = enabled
-        else:
+        elif hasattr(self.network, "decoder") and hasattr(self.network.decoder, "deep_supervision"):
             self.network.decoder.deep_supervision = enabled
 
     def on_train_start(self):
