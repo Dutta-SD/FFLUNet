@@ -19,12 +19,11 @@ from nnunetv2.paths import nnUNet_raw, nnUNet_results
 
 BRATS2020_TASK_ID = 80
 BRATS2020_TASK_NAME = "BraTS2020"
-CKPT = "checkpoint_best.pt"
+CKPT = "checkpoint_best.pth"
 
 
 def generate_brats2020_predictions(
     ip_folder: str,
-    output_dir: str,
     tr_root: str,
     device: str,
 ):
@@ -32,6 +31,13 @@ def generate_brats2020_predictions(
         nnUNet_raw,
         "Dataset%03.0d_%s" % (BRATS2020_TASK_ID, BRATS2020_TASK_NAME),
         "imagesTs",
+    )
+
+    output_dir = join(
+        nnUNet_results,
+        "Dataset%03.0d_%s" % (BRATS2020_TASK_ID, BRATS2020_TASK_NAME),
+        "predictions",
+        tr_root,
     )
     if ip_folder:
         copy_to_test_root_dir(ip_folder)
@@ -119,13 +125,6 @@ def entry_point():
         type=str,
         required=False,
         help="Root input folder containing validation data for Brats2020",
-    )
-
-    parser.add_argument(
-        "-o",
-        type=str,
-        required=True,
-        help="Output Root Folder. Willl be created if not exists",
     )
 
     parser.add_argument(
