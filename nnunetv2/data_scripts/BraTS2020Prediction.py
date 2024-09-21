@@ -1,6 +1,7 @@
 import argparse
 import shutil
 import time
+import torch
 
 
 from nnunetv2.dataset_conversion.Dataset080_BraTS20 import (
@@ -20,6 +21,8 @@ from nnunetv2.paths import nnUNet_raw, nnUNet_results
 BRATS2020_TASK_ID = 80
 BRATS2020_TASK_NAME = "BraTS2020"
 CKPT = "checkpoint_best.pth"
+DATA_ROOT = "data"
+FOLDERNAME = "Dataset%03.0d_%s" % (BRATS2020_TASK_ID, BRATS2020_TASK_NAME)
 
 
 def generate_brats2020_predictions(
@@ -27,18 +30,20 @@ def generate_brats2020_predictions(
     tr_root: str,
     device: str,
 ):
+    device = torch.device(device)
     test_images_root = join(
         nnUNet_raw,
-        "Dataset%03.0d_%s" % (BRATS2020_TASK_ID, BRATS2020_TASK_NAME),
+        FOLDERNAME,
         "imagesTs",
     )
 
     output_dir = join(
         nnUNet_results,
-        "Dataset%03.0d_%s" % (BRATS2020_TASK_ID, BRATS2020_TASK_NAME),
+        FOLDERNAME,
         "predictions",
         tr_root,
     )
+    print("Got ip_folder", ip_folder)
     if ip_folder:
         copy_to_test_root_dir(ip_folder)
 
@@ -73,29 +78,30 @@ def generate_brats2020_predictions(
     )
 
     final_output_folder = join(
-        output_dir,
-        "preds",
-        int(time.time()),
+        DATA_ROOT,
+        "predictions",
+        FOLDERNAME,
+        tr_root,
+        str(int(time.time())),
     )
     convert_folder_with_preds_back_to_BraTS_labeling_convention(
         output_dir,
         final_output_folder,
         num_processes=default_num_processes,
     )
+    print("Finished")
 
 
 def copy_to_test_root_dir(ip_folder):
     brats_data_dir = ip_folder
 
-    foldername = "Dataset%03.0d_%s" % (BRATS2020_TASK_ID, BRATS2020_TASK_NAME)
-
     # Set up nnunet folders for storing test data
-    test_images_root = join(nnUNet_raw, foldername, "imagesTs")
+    test_images_root = join(nnUNet_raw, FOLDERNAME, "imagesTs")
     maybe_mkdir_p(test_images_root)
 
     # Copy files
     case_ids = subdirs(brats_data_dir, prefix="BraTS", join=False)
-
+    print("Copy Started")
     for c in case_ids:
         shutil.copy(
             join(brats_data_dir, c, c + "_t1.nii.gz"),
@@ -113,6 +119,7 @@ def copy_to_test_root_dir(ip_folder):
             join(brats_data_dir, c, c + "_flair.nii.gz"),
             join(test_images_root, c + "_0003.nii.gz"),
         )
+    print("Copy Complete")
 
     return test_images_root
 
@@ -124,6 +131,7 @@ def entry_point():
         "-i",
         type=str,
         required=False,
+        default=None,
         help="Root input folder containing validation data for Brats2020",
     )
 
@@ -143,4 +151,4 @@ def entry_point():
     )
 
     args = parser.parse_args()
-    generate_brats2020_predictions(args.i, args.o, args.tr, args.d)
+    generate_brats2020_predictions(args.i, args.tr, args.D)
