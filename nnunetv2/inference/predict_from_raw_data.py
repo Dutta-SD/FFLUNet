@@ -779,6 +779,8 @@ class nnUNetPredictor(object):
     def _internal_maybe_mirror_and_predict(self, x: torch.Tensor) -> torch.Tensor:
         mirror_axes = self.allowed_mirroring_axes if self.use_mirroring else None
         prediction = self.network(x)
+        if isinstance(prediction, list):
+            prediction = prediction[0]
 
         if mirror_axes is not None:
             # check for invalid numbers in mirror_axes
