@@ -1,4 +1,3 @@
-import multiprocessing
 import shutil
 
 import SimpleITK as sitk
@@ -9,21 +8,31 @@ from nnunetv2.dataset_conversion.generate_dataset_json import generate_dataset_j
 from nnunetv2.paths import nnUNet_raw
 
 
+BRATS_ROOT_DIR = (
+    "data/BraTS2023-SSA-Challenge-TrainingData/BraTS2023-SSA-Challenge-TrainingData_V2"
+)
+
+BRATS23_TASK_ID = 980
+BRATS23_TASK_NAME = "BraTS2023"
+
+foldername = f"Dataset{BRATS23_TASK_ID:03.0f}_{BRATS23_TASK_NAME}"
+
+
 def copy_BraTS_segmentation_and_convert_labels_to_nnUNet(
-    in_file: str, out_file: str
+    in_file: str,
+    out_file: str,
 ) -> None:
-    # use this for segmentation only!!!
-    # nnUNet wants the labels to be continuous. BraTS is 0, 1, 2, 4 -> we make that into 0, 1, 2, 3
+
     img = sitk.ReadImage(in_file)
     img_npy = sitk.GetArrayFromImage(img)
 
     uniques = np.unique(img_npy)
     for u in uniques:
-        if u not in [0, 1, 2, 4]:
+        if u not in [0, 1, 2, 4, 3]:
             raise RuntimeError("unexpected label")
 
     seg_new = np.zeros_like(img_npy)
-    seg_new[img_npy == 4] = 3
+    seg_new[((img_npy == 4) | (img_npy == 3))] = 3
     seg_new[img_npy == 2] = 1
     seg_new[img_npy == 1] = 2
     img_corr = sitk.GetImageFromArray(seg_new)
@@ -31,45 +40,11 @@ def copy_BraTS_segmentation_and_convert_labels_to_nnUNet(
     sitk.WriteImage(img_corr, out_file)
 
 
-def convert_labels_back_to_BraTS(seg: np.ndarray):
-    new_seg = np.zeros_like(seg)
-    new_seg[seg == 1] = 2
-    new_seg[seg == 3] = 4
-    new_seg[seg == 2] = 1
-    return new_seg
-
-
-def load_convert_labels_back_to_BraTS(filename, input_folder, output_folder):
-    a = sitk.ReadImage(join(input_folder, filename))
-    b = sitk.GetArrayFromImage(a)
-    c = convert_labels_back_to_BraTS(b)
-    d = sitk.GetImageFromArray(c)
-    d.CopyInformation(a)
-    sitk.WriteImage(d, join(output_folder, filename))
-
-
-def convert_folder_with_preds_back_to_BraTS_labeling_convention(
-    input_folder: str, output_folder: str, num_processes: int = 12
-):
-    """
-    reads all prediction files (nifti) in the input folder, converts the labels back to BraTS convention and saves the
-    """
-    maybe_mkdir_p(output_folder)
-    nii = subfiles(input_folder, suffix=".nii.gz", join=False)
-    with multiprocessing.get_context("spawn").Pool(num_processes) as p:
-        p.starmap(
-            load_convert_labels_back_to_BraTS,
-            zip(nii, [input_folder] * len(nii), [output_folder] * len(nii)),
-        )
+def pathnorm(p: str):
+    return "_".join(p.split("-"))
 
 
 if __name__ == "__main__":
-    brats_data_dir = "data/bratsAfrica/ASNR-MICCAI-BraTS2023-SSA-Challenge-TrainingData/ASNR-MICCAI-BraTS2023-SSA-Challenge-TrainingData_V2"
-
-    task_id = 980
-    task_name = "BraTS2023"
-
-    foldername = "Dataset%03.0d_%s" % (task_id, task_name)
 
     # setting up nnU-Net folders
     out_base = join(nnUNet_raw, foldername)
@@ -78,28 +53,36 @@ if __name__ == "__main__":
     maybe_mkdir_p(imagestr)
     maybe_mkdir_p(labelstr)
 
-    case_ids = subdirs(brats_data_dir, prefix="BraTS", join=False)
+    all_brats_dirs = subdirs(
+        BRATS_ROOT_DIR,
+        prefix="BraTS",
+        join=False,
+        sort=True,
+    )
+    print(f"Found {len(all_brats_dirs)} cases")
 
-    for c in case_ids:
+    for case_id in all_brats_dirs:
+        print("Working on", case_id)
         shutil.copy(
-            join(brats_data_dir, c, c + "-t1n.nii.gz"),
-            join(imagestr, c + "_0000.nii.gz"),
+            join(BRATS_ROOT_DIR, case_id, case_id + "-t1n.nii.gz"),
+            join(imagestr, pathnorm(case_id + "_0000.nii.gz")),
         )
         shutil.copy(
-            join(brats_data_dir, c, c + "-t1c.nii.gz"),
-            join(imagestr, c + "_0001.nii.gz"),
+            join(BRATS_ROOT_DIR, case_id, case_id + "-t1c.nii.gz"),
+            join(imagestr, pathnorm(case_id + "_0001.nii.gz")),
         )
         shutil.copy(
-            join(brats_data_dir, c, c + "-t2w.nii.gz"),
-            join(imagestr, c + "_0002.nii.gz"),
+            join(BRATS_ROOT_DIR, case_id, case_id + "-t2w.nii.gz"),
+            join(imagestr, pathnorm(case_id + "_0002.nii.gz")),
         )
         shutil.copy(
-            join(brats_data_dir, c, c + "-t2f.nii.gz"),
-            join(imagestr, c + "_0003.nii.gz"),
+            join(BRATS_ROOT_DIR, case_id, case_id + "-t2f.nii.gz"),
+            join(imagestr, pathnorm(case_id + "_0003.nii.gz")),
         )
 
         copy_BraTS_segmentation_and_convert_labels_to_nnUNet(
-            join(brats_data_dir, c, c + "-seg.nii.gz"), join(labelstr, c + ".nii.gz")
+            join(BRATS_ROOT_DIR, case_id, case_id + "-seg.nii.gz"),
+            join(labelstr, pathnorm(case_id + ".nii.gz")),
         )
 
     generate_dataset_json(
@@ -111,10 +94,7 @@ if __name__ == "__main__":
             "tumor core": (2, 3),
             "enhancing tumor": (3,),
         },
-        num_training_cases=len(case_ids),
+        num_training_cases=len(all_brats_dirs),
         file_ending=".nii.gz",
         regions_class_order=(1, 2, 3),
-        license="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
-        reference="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
-        dataset_release="1.0",
     )
