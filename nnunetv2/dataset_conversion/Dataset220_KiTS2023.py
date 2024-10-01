@@ -28,6 +28,7 @@ def convert_kits2023(kits_base_dir: str, nnunet_dataset_id: int = 220):
             join(kits_base_dir, tr, "segmentation.nii.gz"),
             join(labelstr, f"{tr}.nii.gz"),
         )
+        print("Done with case", tr)
 
     generate_dataset_json(
         out_base,
@@ -49,7 +50,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "input_folder",
+        "-i",
         type=str,
         help="The downloaded and extracted KiTS2023 dataset (must have case_XXXXX subfolders)",
     )
@@ -61,7 +62,7 @@ if __name__ == "__main__":
         help="nnU-Net Dataset ID, default: 220",
     )
     args = parser.parse_args()
-    amos_base = args.input_folder
+    amos_base = args.i
     convert_kits2023(amos_base, args.d)
 
     # /media/isensee/raw_data/raw_datasets/kits23/dataset
