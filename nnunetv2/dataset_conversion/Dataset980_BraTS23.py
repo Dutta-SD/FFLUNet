@@ -9,7 +9,7 @@ from nnunetv2.paths import nnUNet_raw
 
 
 BRATS_ROOT_DIR = (
-    "data/BraTS2023-SSA-Challenge-TrainingData/BraTS2023-SSA-Challenge-TrainingData_V2"
+    "data/bratsAfrica/BraTS2023-SSA-Challenge-TrainingData/BraTS2023-SSA-Challenge-TrainingData_V2"
 )
 
 BRATS23_TASK_ID = 980
