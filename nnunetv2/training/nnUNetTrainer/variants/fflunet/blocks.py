@@ -189,16 +189,8 @@ class OutputV2(nn.Module):
                 dilation=1,
                 is_transposed=True,
             ),
-            get_conv(
-                in_channels=in_channels,
-                out_channels=out_channels,
-                kernel=7,
-                stride=1,
-                dilation=1,
-                padding=None,
-            ),
             nn.Conv3d(
-                in_channels=out_channels,
+                in_channels=in_channels,
                 out_channels=out_channels,
                 kernel_size=1,
                 stride=1,
