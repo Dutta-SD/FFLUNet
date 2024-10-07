@@ -64,7 +64,7 @@ def convert_folder_with_preds_back_to_BraTS_labeling_convention(
 
 
 if __name__ == "__main__":
-    brats_data_dir = "/home/others/21MM91R09/Surajit/MICCAI_BraTS2020_TrainingData"
+    brats_data_dir = "/home/surajit/MICCAI_BraTS2020_TrainingData"
 
     task_id = 80
     task_name = "BraTS2020"
