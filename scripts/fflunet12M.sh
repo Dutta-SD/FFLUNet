@@ -13,6 +13,7 @@ nvidia-smi
 export nnUNet_raw="data/nnUNet_raw"
 export nnUNet_preprocessed="data/nnUNet_preprocessed"
 export nnUNet_results="data/nnUNet_results"
+export nnUNet_compile="1"
 
 # python nnunetv2/dataset_conversion/Dataset080_BraTS20.py
 # nnUNetv2_plan_and_preprocess -d 080 --verify_dataset_integrity
