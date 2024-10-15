@@ -1,4 +1,7 @@
 import os
+os.environ["nnUNet_raw"] = "data/nnUNet_raw"
+os.environ["nnUNet_preprocessed"] = "data/nnUNet_preprocessed"
+os.environ["nnUNet_results"] = "data/nnUNet_results"
 
 from nnunetv2.training.nnUNetTrainer.variants.fflunet.nnUNetTrainer_FFLUNetAttentionDynamicShift import (
     FFLUNetAttentionDynamicShift,
@@ -7,9 +10,7 @@ from nnunetv2.training.nnUNetTrainer.variants.fflunet.nnUNetTrainer_FFLUNetDynam
     FFLUNetDynamicWindowShift4Layers,
 )
 
-os.environ["nnUNet_raw"] = "data/nnUNet_raw"
-os.environ["nnUNet_preprocessed"] = "data/nnUNet_preprocessed"
-os.environ["nnUNet_results"] = "data/nnUNet_results"
+
 
 import json
 from calflops import calculate_flops
@@ -26,7 +27,7 @@ from nnunetv2.utilities.plans_handling.plans_handler import PlansManager
 import numpy as np
 
 CONFIG_NAME = "3d_fullres"
-MODEL_NAME = "FFLUNETATTENTION"
+MODEL_NAME = "NNUNET"
 
 
 with open("data/nnUNet_preprocessed/Dataset980_BraTS2023/nnUNetPlans.json") as fp:
@@ -76,9 +77,9 @@ print(f"{model.__class__.__name__} FLOPs:{flops}, MACs:{macs}, Params:{params}")
 times = []
 
 for _ in range(10):
+    t = torch.rand(*input_shape)
     start = time.time()
     with torch.no_grad():
-        t = torch.rand(*input_shape)
         model(t)
     end = time.time()
 

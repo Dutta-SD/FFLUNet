@@ -9,10 +9,10 @@
 #SBATCH --time=1:00:00
 #SBATCH --output=logs/%u_%x_%j.out
 
-conda activate gpu
+# conda activate gpu
 nvidia-smi
 export nnUNet_raw="data/nnUNet_raw"
 export nnUNet_preprocessed="data/nnUNet_preprocessed"
 export nnUNet_results="data/nnUNet_results"
 
-nnUNetv2_predict_brats2020 -tr Dataset080_BraTS2020/nnUNetTrainer_FFLUNetAttentionDynamicShiftDS__nnUNetPlans__3d_fullres 
+nnUNetv2_predict_brats2020 -tr Dataset080_BraTS2020/nnUNetTrainer_FFLUNetAttentionDynamicShift__nnUNetPlans__3d_fullres

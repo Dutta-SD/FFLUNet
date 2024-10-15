@@ -16,4 +16,4 @@ export nnUNet_results="data/nnUNet_results"
 
 # python nnunetv2/dataset_conversion/Dataset080_BraTS20.py
 # nnUNetv2_plan_and_preprocess -d 080 --verify_dataset_integrity
-nnUNetv2_train 080 3d_fullres 1 -tr nnUNetTrainer_FFLUNetDynamicShift12M
+nnUNetv2_train 080 3d_fullres 1 -tr nnUNetTrainer_FFLUNetDynamicShift12M --c
