@@ -53,17 +53,22 @@ def benchmark(model, num_simulation_runs):
         output_as_string=True,
         output_precision=4,
     )
+    print(
+        f"[{model.__class__.__name__}]: (FLOPs:{flops}, MACs:{macs}, #Params:{params})"
+    )
 
     # Inference time
     cpu_times, gpu_times = [], []
 
-    for _ in range(num_simulation_runs):
-        # brats mean shape
-        image = torch.rand(1, 4, 240, 240, 155)
+    roi_size = (128, 128, 128)
+    sw_batch_size = 4
+    overlap = 0.5
 
-        roi_size = (128, 128, 128)
-        sw_batch_size = 4
-        overlap = 0.5
+    model = model.cpu()
+
+    for i in range(num_simulation_runs):
+        print(i)
+        image = torch.rand(1, 4, 240, 240, 155).cpu()
 
         # CPU Inference time
         s = time.time()
@@ -78,8 +83,17 @@ def benchmark(model, num_simulation_runs):
         e = time.time()
         cpu_times.append(e - s)
 
-        model = model.cuda()
-        image = image.cuda()
+    model = model.cuda()
+
+    print(
+        "{} CPU Inference: {:.3f} ± {:.3f} s".format(
+            model.__class__.__name__, *get_avg_std(cpu_times)
+        )
+    )
+
+    for i in range(num_simulation_runs):
+        print(i)
+        image = torch.rand(1, 4, 240, 240, 155).cuda()
 
         # GPU Inference time
         torch.cuda.synchronize()
@@ -95,14 +109,6 @@ def benchmark(model, num_simulation_runs):
         torch.cuda.synchronize()
         e = time.time()
         gpu_times.append(e - s)
-    print(
-        f"[{model.__class__.__name__}]: (FLOPs:{flops}, MACs:{macs}, #Params:{params})"
-    )
-    print(
-        "{} CPU Inference: {:.3f} ± {:.3f} s".format(
-            model.__class__.__name__, *get_avg_std(cpu_times)
-        )
-    )
     print(
         "{} GPU Inference: {:.3f} ± {:.3f} s".format(
             model.__class__.__name__, *get_avg_std(gpu_times)
@@ -139,13 +145,13 @@ def get_model(model_name):
 
 if __name__ == "__main__":
     all_model_names = [
+        "NNUNET",
         "FFLUNET",
         "FFLUNET4LAYERS",
         "FFLUNETATTENTION",
         "FFLUNET12M",
-        "NNUNET",
     ]
 
     for model_name in all_model_names:
         model = get_model(model_name)
-        benchmark(model, 8)
+        benchmark(model, 5)
