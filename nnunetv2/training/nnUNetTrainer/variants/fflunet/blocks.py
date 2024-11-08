@@ -8,6 +8,8 @@ from nnunetv2.training.nnUNetTrainer.variants.fflunet.constructs import get_conv
 class DynamicMultiViewFeatureFusion(nn.Module):
     def __init__(self, in_channels: int, out_channels: int):
         super().__init__()
+        self.in_channels = in_channels
+        self.out_channels = out_channels
         self.local_fe = get_conv(
             in_channels=in_channels,
             out_channels=out_channels,
@@ -53,6 +55,8 @@ class DynamicMultiViewFeatureFusion(nn.Module):
 class DepthWiseSeparableConvolution(nn.Module):
     def __init__(self, in_channels, out_channels):
         super().__init__()
+        self.in_channels = in_channels
+        self.out_channels = out_channels
         self.d_layer = get_conv(
             in_channels=in_channels,
             out_channels=in_channels,
@@ -77,6 +81,8 @@ class DepthWiseSeparableConvolution(nn.Module):
 class UpSample(nn.Module):
     def __init__(self, in_channels: int, out_channels: int) -> None:
         super().__init__()
+        self.in_channels = in_channels
+        self.out_channels = out_channels
 
         self.conv1 = get_conv(
             in_channels=in_channels,
@@ -106,6 +112,8 @@ class UpSample(nn.Module):
 class Input(nn.Module):
     def __init__(self, in_channels, out_channels) -> None:
         super().__init__()
+        self.in_channels = in_channels
+        self.out_channels = out_channels
 
         self.model = nn.Sequential(
             get_conv(
@@ -133,6 +141,8 @@ class Input(nn.Module):
 class DownSample(nn.Module):
     def __init__(self, in_channels: int, out_channels: int):
         super().__init__()
+        self.in_channels = in_channels
+        self.out_channels = out_channels
         self.conv_path = nn.Sequential(
             get_conv(in_channels=in_channels, out_channels=in_channels),
             get_conv(
@@ -151,6 +161,8 @@ class DownSample(nn.Module):
 class Output(nn.Module):
     def __init__(self, in_channels: int, out_channels: int):
         super().__init__()
+        self.in_channels = in_channels
+        self.out_channels = out_channels
         self.conv_path = nn.Sequential(
             get_conv(
                 in_channels=in_channels,
@@ -178,6 +190,8 @@ class Output(nn.Module):
 class OutputV2(nn.Module):
     def __init__(self, in_channels: int, out_channels: int):
         super().__init__()
+        self.in_channels = in_channels
+        self.out_channels = out_channels
         self.conv_path = nn.Sequential(
             get_conv(
                 in_channels=in_channels,
