@@ -40,7 +40,7 @@ def get_conv(
             padding=1,
             dropout=DROPOUT,
             act=(
-                (DEFAULT_ACT, {"num_parameters": out_channels})
+                (DEFAULT_ACT, {"num_parameters": in_channels})
                 if act == DEFAULT_ACT
                 else act
             ),

@@ -1,8 +1,10 @@
+import torch
 from nnunetv2.training.nnUNetTrainer.variants.fflunet.nnUNetTrainer_FFLUNet import (
     FFLUNet,
 )
+from nnunetv2.training.nnUNetTrainer.variants.fflunet.nnUNetTrainer_FFLUNetDynamicShiftMoreParams import FFLUNet_MoreParams
 
-model = FFLUNet(4, 3)
+model = FFLUNet_MoreParams(4, 3)
 
 
 def count_parameters(model):
@@ -30,4 +32,9 @@ def count_parameters_per_layer(model):
             print(new_name, count_parameters(module))
 
 
-count_parameters_per_layer(model)
+try:
+    count_parameters_per_layer(model)
+finally:
+    print(count_parameters(model))
+    with torch.no_grad():
+        print(model(torch.randn(1, 4, 64, 64, 64)).shape)
