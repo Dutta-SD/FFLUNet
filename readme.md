@@ -1,4 +1,4 @@
-# FFLUNet: Feature Fused Lightweight UNET for Medical Image Segmentation
+# FFLUNet: Feature Fused Lightweight UNET for Brain Tumor Segmentation
 
 [![Paper](https://img.shields.io/badge/Paper-Computers%20in%20Biology%20and%20Medicine-blue.svg)](https://doi.org/XX.XXXX/XXX)  
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
@@ -19,7 +19,7 @@
 
 ## 📄 Paper
 
-> **Title**: FFLUNet: Feature Fused Lightweight UNET for Medical Image Segmentation  
+> **Title**: FFLUNet: Feature Fused Lightweight UNET for Brain Tumor Segmentation  
 > **Authors**: Surajit Kundu, Sandip Dutta, Jayanta Mukhopadhyay, Nishant Chakravorty
 > **Journal**: Computers in Biology and Medicine  
 > **DOI**: [https://doi.org/10.1016/j.compbiomed.2025.110460](https://doi.org/10.1016/j.compbiomed.2025.110460)
@@ -31,7 +31,7 @@
 The FFLUNet architecture enhances the classical U-Net by integrating feature fusion blocks that aggregate spatial and semantic information across layers. This fusion is both **progressive and multi-scale**, leading to better context understanding.
 
 <p align="center">
-  <img src="assets/fflunet_architecture.png" width="700"/>
+  <img src="[assets/fflunet_architecture.png](https://ars.els-cdn.com/content/image/1-s2.0-S001048252500811X-gr1_lrg.jpg)" width="700"/>
 </p>
 
 ---
@@ -56,3 +56,21 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 git clone https://github.com/your-username/FFLUNet.git
 cd FFLUNet
 pip install -e .
+
+```
+#### Experiment planning and preprocessing
+```
+nnUNetv2_plan_and_preprocess -d DATASET_ID --verify_dataset_integrity
+```
+#### 3D full resolution U-Net training
+```bash
+nnUNetv2_train DATASET_NAME_OR_ID 3d_fullres FOLD -tr nnUNetTrainer_FFLUNet
+```
+
+### 📚 More Information
+
+For detailed documentation, setup instructions, and usage guidelines, please refer to the official nnU-Net repository:
+
+🔗 [https://github.com/MIC-DKFZ/nnUNet/tree/master/documentation](https://github.com/MIC-DKFZ/nnUNet/tree/master/documentation)
+
+
