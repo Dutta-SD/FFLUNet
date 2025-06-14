@@ -31,7 +31,7 @@
 The FFLUNet architecture enhances the classical U-Net by integrating feature fusion blocks that aggregate spatial and semantic information across layers. This fusion is both **progressive and multi-scale**, leading to better context understanding.
 
 <p align="center">
-  <img src="[assets/fflunet_architecture.png](https://ars.els-cdn.com/content/image/1-s2.0-S001048252500811X-gr1_lrg.jpg)" width="700"/>
+  <img src="https://ars.els-cdn.com/content/image/1-s2.0-S001048252500811X-gr1_lrg.jpg" alt="Model Architecture" width="600"/>
 </p>
 
 ---
