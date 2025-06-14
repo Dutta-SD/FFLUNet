@@ -53,7 +53,7 @@ FFLUNet has been tested on the following datasets:
 ```bash
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
-git clone https://github.com/your-username/FFLUNet.git
+git clone https://github.com/Dutta-SD/FFLUNet.git
 cd FFLUNet
 pip install -e .
 
