@@ -1,6 +1,6 @@
 # FFLUNet: Feature Fused Lightweight UNET for Brain Tumor Segmentation
 
-[![Paper](https://img.shields.io/badge/Paper-Computers%20in%20Biology%20and%20Medicine-blue.svg)](https://doi.org/XX.XXXX/XXX)  
+[![Paper](https://img.shields.io/badge/Paper-Computers%20in%20Biology%20and%20Medicine-blue.svg)](https://doi.org/10.1016/j.compbiomed.2025.110460)  
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 
