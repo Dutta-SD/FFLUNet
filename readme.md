@@ -26,6 +26,14 @@
 > **Audio** 🎧 [Click to Listen](https://raw.githubusercontent.com/Dutta-SD/FFLUNet/main/FFLUNet_Brain_Tumor_Segmentation.mp3)
 
 
+### 🔊 Audio Summary
+
+> Listen to the audio summary of the paper:  
+> <audio controls>
+>   <source src="https://raw.githubusercontent.com/Dutta-SD/FFLUNet/main/FFLUNet_Brain_Tumor_Segmentation.mp3" type="audio/mpeg">
+>   Your browser does not support the audio element.
+> </audio>
+
 ---
 
 ## 🧠 Model Architecture
