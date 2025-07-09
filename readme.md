@@ -20,14 +20,11 @@
 ## 📄 Paper
 
 > **Title**: FFLUNet: Feature Fused Lightweight UNET for Brain Tumor Segmentation  
-> **Authors**: Surajit Kundu, Sandip Dutta, Jayanta Mukhopadhyay, Nishant Chakravorty
+> **Authors**: Surajit Kundu, Sandip Dutta, Jayanta Mukhopadhyay, Nishant Chakravorty  
 > **Journal**: Computers in Biology and Medicine  
-> **DOI**: [https://doi.org/10.1016/j.compbiomed.2025.110460](https://doi.org/10.1016/j.compbiomed.2025.110460)
->**Audio** 🎧 
-  <audio controls>
-  <source src="https://raw.githubusercontent.com/Dutta-SD/FFLUNet/main/FFLUNet_Brain_Tumor_Segmentation.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-  </audio>
+> **DOI**: [https://doi.org/10.1016/j.compbiomed.2025.110460](https://doi.org/10.1016/j.compbiomed.2025.110460)  
+> **Audio** 🎧 [Click to Listen](https://raw.githubusercontent.com/Dutta-SD/FFLUNet/main/FFLUNet_Brain_Tumor_Segmentation.mp3)
+
 
 ---
 
